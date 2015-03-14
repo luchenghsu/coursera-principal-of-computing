@@ -77,17 +77,18 @@ def gen_all_holds(hand):
 
     Returns a set of tuples, where each tuple is dice to hold
     """
-    complete_set = list(hand)
-    binary_counts =[bin(x)[2:].rjust(len(hand),'0') for x in range(2**len(hand))]        
-         
-    power_set = set([()])
+    answer_set = set([()])
     
-    for count in binary_counts:
-        power_set.add(tuple([complete_set[i] for i in range(len(count))
-                         if count[i] == '1']))
-    
+    for item in hand:
+        temp_set = set([()])
         
-    return power_set 
+        for partial_sequence in answer_set.copy():
+            new_sequence = list(partial_sequence)
+            new_sequence.append(item)
+            temp_set.add(tuple(new_sequence))
+            answer_set.update(temp_set)
+
+    return answer_set
 
 def strategy(hand, num_die_sides):
     """
