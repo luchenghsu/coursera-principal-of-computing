@@ -108,26 +108,33 @@ class TwentyFortyEight:
         Move all tiles in the given direction and add
         a new tile if any tiles moved.
         """
-        func = lambda direction: self._grid_height if direction == UP or direction == DOWN else self._grid_width
-        steps = func(direction)
+
+        tile_changed = False
+        
+        steps = 0
+        if direction == UP or direction == DOWN:
+            steps = self._grid_height
+        else:
+            steps = self._grid_width
         
         for (row, col) in self._initial_tiles_dictionary[direction]:
                 template_list = []
                 for step in range(steps):
                     traverse_row = row + OFFSETS[direction][0] * step
                     traverse_col = col + OFFSETS[direction][1] * step
-                    #print (traverse_row, traverse_col)
                     template_list.append(self._cells[traverse_row][traverse_col])
                 
-                template_list = merge(template_list)  
-                #print template_list
+                merged_list = merge(template_list)
+                if merged_list != template_list:
+                    tile_changed = True
+                    
                 for step in range(steps):
                     traverse_row = row + OFFSETS[direction][0] * step
                     traverse_col = col + OFFSETS[direction][1] * step
-                    self._cells[traverse_row][traverse_col] = template_list[step]
+                    self._cells[traverse_row][traverse_col] = merged_list[step]
         
-        
-        self.new_tile()
+        if tile_changed == True:
+            self.new_tile()
                    
 
     def new_tile(self):
